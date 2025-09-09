@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Timers;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
@@ -16,7 +15,7 @@ public class SessionManager
 
 
 
-    public SessionManager(NavigationManager navigation, IJSRuntime jsRuntime, IAccessTokenProvider tokenProvider)
+    public SessionManager(NavigationManager navigation, IAccessTokenProvider tokenProvider)
     {
         _navigation = navigation;
         _tokenProvider = tokenProvider;

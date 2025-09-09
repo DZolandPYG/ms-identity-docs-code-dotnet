@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 public class SessionManager
 {
     private readonly NavigationManager _navigation;
-    private readonly IJSRuntime _jsRuntime;
     private System.Timers.Timer _logoutTimer = new System.Timers.Timer();
     private readonly IAccessTokenProvider _tokenProvider;
     private ElapsedEventHandler? _logoutHandler;
@@ -20,7 +19,6 @@ public class SessionManager
     public SessionManager(NavigationManager navigation, IJSRuntime jsRuntime, IAccessTokenProvider tokenProvider)
     {
         _navigation = navigation;
-        _jsRuntime = jsRuntime;
         _tokenProvider = tokenProvider;
     }
 
@@ -33,7 +31,6 @@ public class SessionManager
         _logoutTimer?.Dispose();
 
         var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        await _jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "sessionStart", now.ToString());
 
         var timeoutMs = timeoutMinutes * 60 * 1000;
 
@@ -64,12 +61,10 @@ public class SessionManager
             string loginHint = JwtHelper.ExtractLoginHint(idToken);
             string tenantId = "7d0e67e6-a37b-445e-82f0-6cc16260055e";
 
-            await _jsRuntime.InvokeVoidAsync("alert", $"First ForceLogoutAsync triggered at {DateTime.Now}; loginHint: {loginHint}");
 
             var logoutUrl = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/logout?id_token_hint={idToken}&logout_hint={loginHint}&post_logout_redirect_uri=http://localhost:5000/logged-out";
 
             //_navigation.NavigateTo(logoutUrl, forceLoad: true);
-            await _jsRuntime.InvokeVoidAsync("revokeRefreshToken");
             _navigation.NavigateToLogout(logoutUrl);
 
 
@@ -77,7 +72,6 @@ public class SessionManager
         else
         {
             Console.WriteLine("Failed to grab token!");
-            await _jsRuntime.InvokeVoidAsync("alert", $"Second ForceLogoutAsync triggered at {DateTime.Now}");
             // Fallback if token retrieval fails
             _navigation.NavigateTo("authentication/logout");
         }

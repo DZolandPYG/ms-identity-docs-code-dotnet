@@ -40,39 +40,6 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <!-- MSAL -->
-    <script src="https://alcdn.msauth.net/browser/2.37.0/js/msal-browser.min.js"></script>
-
-    <!-- Your MSAL interop logic -->
-    <script src="js/authInterop.js"></script>
-
-    <script>
-        setTimeout(() => {
-            console.log("Delayed MSAL init check:", window.location.hash);
-            if (window.authInterop && typeof window.authInterop.initialize === "function") {
-                window.authInterop.initialize();
-            }
-        }, 300); // You can increase this to 200–300ms if needed
-    </script>
-
-
-    <!-- ✅ Call initialize BEFORE Blazor loads -->
-    <script>
-        if (window.authInterop && typeof window.authInterop.initialize === "function") {
-            window.authInterop.initialize();
-        }
-    </script>
-
-    <!-- Blazor and other scripts -->
-    <script src="_content/Microsoft.Authentication.WebAssembly.Msal/AuthenticationService.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script src="session.js"></script>
-    <script src="/js/inactivity.js"></script>
-
-
-    <script>
-        navigator.serviceWorker.register('service-worker.js');
-    </script>
 </body>
 
 

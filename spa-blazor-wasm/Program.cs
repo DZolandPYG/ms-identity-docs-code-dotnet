@@ -4,7 +4,6 @@ using BlazorWasm.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.JSInterop;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -51,7 +50,3 @@ builder.Services.AddBlazoredLocalStorage();
 
 
 await builder.Build().RunAsync();
-JsInteropContext.JSRuntime = builder.Services.BuildServiceProvider().GetRequiredService<IJSRuntime>();
-
-var _ = typeof(InactivityHandler);
-

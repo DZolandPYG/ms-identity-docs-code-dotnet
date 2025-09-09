@@ -17,5 +17,16 @@
       "type": "image/png",
       "sizes": "192x192"
     }
-  ]
+  ],
+
+  "web": {
+    "redirectUris": [
+      "http://localhost:5000/auth-callback"
+    ],
+    "implicitGrantSettings": {
+      "enableIdTokenIssuance": false,
+      "enableAccessTokenIssuance": false
+    }
+  }
+
 }

@@ -1,16 +1,13 @@
-﻿<CascadingAuthenticationState>
+﻿@inject AuthenticationStateProvider AuthProvider
+@inject SessionManager SessionManager
+@inject NavigationManager Navigation
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    @if (context.User.Identity?.IsAuthenticated != true)
-                    {
-                        <RedirectToLogin />
-                    }
-                    else
-                    {
-                        <p role="alert">You are not authorized to access this resource.</p>
-                    }
+                    <p>You are not authorized. Please log in.</p>
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -23,3 +20,14 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // var authState = await AuthProvider.GetAuthenticationStateAsync();
+        // if (authState.User.Identity?.IsAuthenticated == true)
+        // {
+        //     await SessionManager.StartSessionTimerAsync(1); // 30-minute session
+        // }
+    }
+}

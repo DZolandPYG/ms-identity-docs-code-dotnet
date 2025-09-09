@@ -1,5 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
+@inject SessionManager SessionManager
+@inject NavigationManager Navigation
+
+
+@inject IJSRuntime JS
+
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -15,3 +22,33 @@
         </article>
     </main>
 </div>
+
+@* <AuthorizeView>
+    <Authorized> *@
+@code {
+    private bool _initialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            _initialized = true;
+
+            await JS.InvokeVoidAsync("authInterop.initialize");
+
+            var loginState = await JS.InvokeAsync<string>("localStorage.getItem", "msal.loggedIn");
+
+            await Task.Delay(10000);
+
+            if (loginState != "true")
+            {
+
+                await JS.InvokeVoidAsync("authInterop.loginWithPrompt");
+            }
+        }
+    }
+}
+
+
+@*     </Authorized>
+</AuthorizeView> *@

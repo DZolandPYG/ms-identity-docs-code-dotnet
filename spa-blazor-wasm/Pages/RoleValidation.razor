@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Text.Json
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (VerifyUserIsRole(userArray, Role))
+{
+    @ChildContent
+}
+
+
+@code {
+
+    [Parameter] public string Role { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private List<string> userRoles = new();
+    string userStuff;
+    string userArrayJson;
+    string[] userArray;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            userRoles = user.FindAll(c => c.Type == "roles").Select(c => c.Value).ToList();
+            userArrayJson = userRoles.First();
+            userArray = JsonSerializer.Deserialize<string[]>(userArrayJson);
+            userStuff = JsonSerializer.Serialize(userRoles);
+        }
+    }
+
+    public bool VerifyUserIsRole(string[] userRoles, string desiredRole)
+    {
+        if (userRoles.Contains(desiredRole))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public RenderFragment DisplayIf(string RoleCheck)
+    {
+        bool success = VerifyUserIsRole(userArray, RoleCheck);
+        if (success)
+        {
+            return@<p>You can see this since you are a @RoleCheck</p>;
+        }
+        else
+        {
+            return@<p>You cannot see this since you are NOT a @RoleCheck</p>;
+        }
+    }
+
+}

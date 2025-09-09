@@ -1,0 +1,25 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@page "/authcheck"
+
+
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome, authenticated user!</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not logged in.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+<p>Your name is @name</p>
+
+@code {
+    string name { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await localStorage.SetItemAsync("name", "John Smith");
+        name = await localStorage.GetItemAsync<string>("name");
+    }
+
+}

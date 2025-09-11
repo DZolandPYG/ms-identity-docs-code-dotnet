@@ -44,6 +44,12 @@ builder.Services.AddScoped(sp =>
     return new HttpClient(authorizationMessageHandler);
 });
 
+// Register MemoryCache as a singleton
+builder.Services.AddMemoryCache();
+
+// Register your services that depend on IMemoryCache
+builder.Services.AddScoped<MyCacheService>();
+
 builder.Services.AddScoped<StateContainer>();
 builder.Services.AddBlazoredLocalStorage();
 

@@ -1,0 +1,30 @@
+﻿@inject MyCacheService CacheService
+
+@page "/MyCacheServiceTesting"
+
+
+<button @onclick="SetCache">Set Cache</button>
+<button @onclick="GetCache">Get Cache</button>
+
+<p>@cachedValue</p>
+
+@code {
+    private string cachedValue;
+
+    private void SetCache()
+    {
+        CacheService.SetCacheValue("greeting", "Hello from cache!");
+    }
+
+    private void GetCache()
+    {
+        if (CacheService.TryGetCacheValue<string>("greeting", out var value))
+        {
+            cachedValue = value;
+        }
+        else
+        {
+            cachedValue = "Cache miss";
+        }
+    }
+}

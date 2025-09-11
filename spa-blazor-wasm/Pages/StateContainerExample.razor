@@ -12,13 +12,21 @@
     </button>
 </p>
 
-<Nested />
+<p>Let's play around with memory caching!! The value should be: </p>
+<button @onclick="SetCachedData">
+    Do the thing
+</button>
+<p>Our cached data is @cachedData</p>
 
 @code {
+    string cachedData;
+    MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
+
     protected override void OnInitialized()
     {
-         Console.WriteLine($"Current state: {StateContainer.Property}");
+        Console.WriteLine($"Current state: {StateContainer.Property}");
         StateContainer.OnChange += StateHasChanged;
+        GetCachedData();
     }
 
     private void ChangePropertyValue()
@@ -30,5 +38,42 @@
     public void Dispose()
     {
         StateContainer.OnChange -= StateHasChanged;
+    }
+
+    // Create MemoryCache instance with default options
+
+    string cacheKey = "myKey";
+    string data = "This is cached data";
+
+    // Set item with expiration of 5 minutes
+    public void SetCachedData()
+    {
+        var cache = new MemoryCache(new MemoryCacheOptions());
+
+        string key = "myKey";
+
+        if (!cache.TryGetValue(key, out string cachedValue))
+        {
+            Console.WriteLine("Key not found in storage; storing");
+            cachedValue = "Stored in memory cache";
+            cachedData = cachedValue;
+            cache.Set(key, cachedValue, TimeSpan.FromMinutes(10));
+        }
+
+        Console.WriteLine(cachedValue);
+    }
+
+    public void GetCachedData()
+    {
+        // Retrieve item
+        if (cache.TryGetValue(cacheKey, out cachedData))
+        {
+            Console.WriteLine("Cached Data: " + cachedData);
+        }
+
+        else
+        {
+            Console.WriteLine("Cache miss or expired.");
+        }
     }
 }
